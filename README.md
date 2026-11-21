@@ -93,6 +93,45 @@ Une partie de la génération initiale du code et de cette documentation a été
 
 # Guide pédagogique pas à pas
 
+## Architecture Clean Architecture du projet
+
+Le projet reprend les quatre responsabilités du TP :
+
+```text
+src/
+├── domain/                         # Règles métier et contrats
+│   ├── campus.ts                   # Entités Student, HelpRequest, Proposal...
+│   └── campus-repository.ts        # Port CampusRepository
+├── application/                    # Cas d'utilisation
+│   └── campus-use-cases.ts         # Créer, proposer, accepter, clôturer...
+├── infrastructure/                # Implémentations techniques
+│   ├── sqlite-db.ts                # Connexion, schéma et données SQLite
+│   ├── sqlite-campus-repository.ts # Implémentation du port CampusRepository
+│   ├── auth-session.ts             # Sessions HTTP-only
+│   └── campus-repository.ts        # Instance branchée sur l'application
+├── presentation/                   # Composants React interactifs
+│   └── components/
+├── app/                            # Pages Next.js et routage App Router
+└── lib/
+    └── actions.ts                  # Pont entre formulaires et use cases
+```
+
+### Direction des dépendances
+
+```text
+Presentation -> Application -> Domain
+      |
+      v
+Infrastructure
+```
+
+- `domain` n'importe aucun autre dossier technique.
+- `application` reçoit un `CampusRepository` et ne connaît pas SQLite.
+- `infrastructure` implémente les contrats Domain avec SQLite.
+- `presentation` appelle les use cases ou affiche leurs données.
+
+Pour remplacer SQLite, il suffirait de créer une nouvelle implémentation de `CampusRepository` et de remplacer l'instance dans `src/infrastructure/campus-repository.ts`. Les use cases pourraient rester inchangés.
+
 Cette section explique le projet pour quelqu’un qui découvre Next.js.
 
 ## 1. Vue générale de l’architecture

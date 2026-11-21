@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUser } from "@/infrastructure/auth-session";
 import { logout } from "@/lib/actions";
 
 // Métadonnées de l'application : elles servent notamment au titre de l'onglet et au partage de lien.

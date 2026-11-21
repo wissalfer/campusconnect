@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
-import { getCurrentUser } from "@/lib/auth";
-import { CreateRequestForm } from "@/components/RequestForms";
+import { getCurrentUser } from "@/infrastructure/auth-session";
+import { CreateRequestForm } from "@/presentation/components/RequestForms";
 
 export default async function NewRequestPage() {
   if (!(await getCurrentUser())) redirect("/login");

@@ -1,4 +1,3 @@
-// Couche données : ce fichier ouvre SQLite, crée les tables et insère les données de démonstration.
 // Les composants/pages ne doivent pas écrire directement dans SQLite : ils passent normalement par les Server Actions.
 import Database from "better-sqlite3";
 import path from "node:path";

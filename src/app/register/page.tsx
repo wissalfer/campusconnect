@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { RegisterForm } from "@/components/AuthForms";
+import { RegisterForm } from "@/presentation/components/AuthForms";
 import { redirect } from "next/navigation";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUser } from "@/infrastructure/auth-session";
 
 export default async function RegisterPage() {
   if (await getCurrentUser()) redirect("/dashboard");

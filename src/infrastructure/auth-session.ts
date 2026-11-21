@@ -1,8 +1,7 @@
-// Couche authentification : cette session est indépendante de React et fonctionne côté serveur.
 import "server-only";
 import { cookies } from "next/headers";
 import { SignJWT, jwtVerify } from "jose";
-import { db } from "./db";
+import { db } from "./sqlite-db";
 
 const secret = new TextEncoder().encode(process.env.AUTH_SECRET || "campusconnect-development-secret-change-me");
 

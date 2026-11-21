@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
-import { getCurrentUser } from "@/lib/auth";
-import { ProfileForm } from "@/components/RequestForms";
+import { getCurrentUser } from "@/infrastructure/auth-session";
+import { ProfileForm } from "@/presentation/components/RequestForms";
 
 export default async function ProfilePage() {
   const user=await getCurrentUser();
