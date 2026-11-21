@@ -21,3 +21,4 @@ export default async function AdminPage() {
     {reports.length?<div className="table-wrap"><table className="table"><thead><tr><th>Publication</th><th>Auteur</th><th>Matière</th><th>Signalements</th><th>Actions</th></tr></thead><tbody>{reports.map(r=><tr key={r.id}><td><strong>{r.title}</strong></td><td>{r.author}</td><td>{r.subject}</td><td>{r.pending_count}</td><td><div style={{display:"flex",gap:8}}><form action={keep.bind(null,r.id)}><button className="button button-ghost" type="submit">Conserver</button></form><form action={hide.bind(null,r.id)}><button className="button button-danger" type="submit">Masquer</button></form></div></td></tr>)}</tbody></table></div>:<div className="empty"><strong>Aucun signalement en attente</strong><p>L’espace de modération est à jour.</p></div>}
   </main>;
 }
+// Route "/admin" : espace réservé aux utilisateurs dont le rôle est "admin".

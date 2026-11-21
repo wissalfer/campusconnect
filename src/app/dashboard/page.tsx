@@ -20,3 +20,5 @@ export default async function DashboardPage() {
     </main>
   );
 }
+// Route "/dashboard" : espace personnel accessible après connexion.
+// Les trois requêtes SQL alimentent les cartes et tableaux publiées, proposées et réalisées.

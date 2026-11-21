@@ -1,5 +1,7 @@
 "use server";
 
+// Couche métier : les formulaires appellent ces fonctions.
+// Chaque fonction reçoit les données du navigateur, valide les entrées puis vérifie les droits avant SQLite.
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import bcrypt from "bcryptjs";
@@ -7,6 +9,7 @@ import { z } from "zod";
 import { db } from "./db";
 import { clearSession, createSession, getCurrentUser } from "./auth";
 
+// Register valide toutes les données avec Zod, vérifie l'unicité email et hache le mot de passe.
 export async function register(formData: FormData) {
   const parsed = z.object({
     name: z.string().trim().min(2).max(80),
@@ -26,6 +29,7 @@ export async function register(formData: FormData) {
   redirect("/dashboard");
 }
 
+// Login compare le mot de passe saisi au hash enregistré puis crée une session.
 export async function login(formData: FormData) {
   const email = String(formData.get("email") || "").trim().toLowerCase();
   const password = String(formData.get("password") || "");
@@ -38,11 +42,13 @@ export async function login(formData: FormData) {
 
 type SessionUserRow = { id:number; name:string; email:string; speciality:string; level:string; skills:string; role:"student"|"admin" };
 
+// Suppression du cookie de session : aucune donnée serveur n'est conservée après cette action.
 export async function logout() {
   await clearSession();
   redirect("/");
 }
 
+// Création : vérifie l'utilisateur, valide le formulaire, insère avec le statut "open".
 export async function createRequest(formData: FormData) {
   const user = await getCurrentUser();
   if (!user) return { error: "Vous devez être connecté." };
@@ -62,6 +68,7 @@ export async function createRequest(formData: FormData) {
   redirect(`/requests/${Number(result.lastInsertRowid)}`);
 }
 
+// Mise à jour du profil : seule la personne connectée peut modifier sa propre ligne utilisateur.
 export async function updateProfile(formData: FormData) {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
@@ -77,6 +84,7 @@ export async function updateProfile(formData: FormData) {
   return { success: "Profil enregistré." };
 }
 
+// Proposition : vérifie que la demande est ouverte et qu'un étudiant ne propose pas deux fois.
 export async function proposeHelp(requestId: number, formData: FormData) {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
@@ -94,6 +102,7 @@ export async function proposeHelp(requestId: number, formData: FormData) {
   return { success: "Votre proposition a été envoyée." };
 }
 
+// Décision : vérifie que l'utilisateur est l'auteur, puis traite la proposition dans une transaction.
 export async function decideProposal(requestId: number, proposalId: number, decision: "accepted"|"refused") {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
@@ -117,6 +126,7 @@ export async function decideProposal(requestId: number, proposalId: number, deci
   return { success: decision === "accepted" ? "Aide acceptée." : "Proposition refusée." };
 }
 
+// Clôture : transforme une séance acceptée en séance terminée, uniquement par son auteur.
 export async function completeRequest(requestId: number) {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
@@ -131,6 +141,7 @@ export async function completeRequest(requestId: number) {
   return { success: "Séance terminée." };
 }
 
+// Évaluation : autorisée uniquement aux participants après clôture, une fois par personne.
 export async function addReview(requestId: number, formData: FormData) {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
@@ -151,6 +162,7 @@ export async function addReview(requestId: number, formData: FormData) {
   return { success: "Évaluation enregistrée." };
 }
 
+// Signalement : mémorise la raison et évite les doublons grâce à l'unicité SQLite.
 export async function reportRequest(requestId: number, formData: FormData) {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
@@ -167,6 +179,7 @@ export async function reportRequest(requestId: number, formData: FormData) {
   return { success: "Signalement envoyé à l’administration." };
 }
 
+// Modération : cette fonction vérifie impérativement le rôle administrateur côté serveur.
 export async function moderateRequest(requestId: number, action: "keep"|"hide") {
   const user = await getCurrentUser();
   if (!user || user.role !== "admin") return { error: "Accès administrateur requis." };

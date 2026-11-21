@@ -1,3 +1,4 @@
+// Couche authentification : cette session est indépendante de React et fonctionne côté serveur.
 import "server-only";
 import { cookies } from "next/headers";
 import { SignJWT, jwtVerify } from "jose";
@@ -15,6 +16,7 @@ export type SessionUser = {
   role: "student" | "admin";
 };
 
+// createSession transforme l'utilisateur en jeton signé puis le place dans un cookie inaccessible au JavaScript.
 export async function createSession(user: SessionUser) {
   const token = await new SignJWT({ user }).setProtectedHeader({ alg: "HS256" }).setIssuedAt().setExpirationTime("7d").sign(secret);
   const cookieStore = await cookies();
@@ -26,6 +28,8 @@ export async function clearSession() {
   cookieStore.delete("campus_session");
 }
 
+// getCurrentUser lit le cookie, vérifie sa signature et recharge l'utilisateur depuis SQLite.
+// Elle retourne null si l'utilisateur n'est pas connecté ou si le cookie est invalide.
 export async function getCurrentUser(): Promise<SessionUser | null> {
   const cookieStore = await cookies();
   const token = cookieStore.get("campus_session")?.value;

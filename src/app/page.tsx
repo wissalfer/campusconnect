@@ -1,3 +1,5 @@
+// Page d'accueil : route "/", chargée côté serveur par Next.js.
+// Elle lit directement SQLite pour préparer une liste récente, puis rend du JSX React.
 import Link from "next/link";
 import { db } from "@/lib/db";
 

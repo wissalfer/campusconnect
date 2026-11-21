@@ -5,6 +5,7 @@ import Link from "next/link";
 import { getCurrentUser } from "@/lib/auth";
 import { logout } from "@/lib/actions";
 
+// Métadonnées de l'application : elles servent notamment au titre de l'onglet et au partage de lien.
 export const metadata: Metadata = {
   title: "CampusConnect",
   description: "Entraide et partage entre étudiants",

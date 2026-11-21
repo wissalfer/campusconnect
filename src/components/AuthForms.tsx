@@ -1,9 +1,11 @@
 "use client";
 
+// Composants formulaire côté navigateur : ils affichent les erreurs et appellent les Server Actions d'authentification.
 import { useState, type FormEvent } from "react";
 import { login, register } from "@/lib/actions";
 
 export function LoginForm() {
+  // useState conserve les erreurs affichées dans le navigateur après l'appel serveur.
   const [state, setState] = useState<{error:string}|null>(null);
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

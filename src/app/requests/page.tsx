@@ -26,3 +26,5 @@ export default async function RequestsPage({searchParams}:{searchParams:Promise<
     </main>
   );
 }
+// Route "/requests" : liste publique avec filtres.
+// searchParams contient les paramètres URL, par exemple ?subject=Informatique&level=Licence+3.

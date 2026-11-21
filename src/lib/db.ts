@@ -1,3 +1,5 @@
+// Couche données : ce fichier ouvre SQLite, crée les tables et insère les données de démonstration.
+// Les composants/pages ne doivent pas écrire directement dans SQLite : ils passent normalement par les Server Actions.
 import Database from "better-sqlite3";
 import path from "node:path";
 import bcrypt from "bcryptjs";
@@ -7,7 +9,9 @@ export const db = new Database(dbPath);
 db.pragma("journal_mode = WAL");
 db.pragma("foreign_keys = ON");
 
+// db.exec() crée toutes les relations une seule fois au démarrage si elles n'existent pas encore.
 db.exec(`
+  -- Tables users/requests/proposals/reviews/reports : chaque table porte une responsabilité distincte.
   CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,

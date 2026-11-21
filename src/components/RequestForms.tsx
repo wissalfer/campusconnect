@@ -1,10 +1,13 @@
 "use client";
 
+// Composants réutilisables pour les formulaires métier.
+// Le serveur reste la source de vérité : ces composants améliorent surtout l'expérience et l'affichage des erreurs.
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { addReview, createRequest, proposeHelp, reportRequest, updateProfile } from "@/lib/actions";
 
 export function CreateRequestForm() {
+  // preventDefault garde l'utilisateur sur la page pendant que la Server Action traite les données.
   const [state,setState]=useState<{error:string}|null>(null);
   async function submit(event:FormEvent<HTMLFormElement>) { event.preventDefault(); const result=await createRequest(new FormData(event.currentTarget)); if(result?.error)setState(result); }
   return (

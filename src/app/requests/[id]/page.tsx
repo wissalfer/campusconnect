@@ -37,3 +37,5 @@ export default async function RequestDetailPage({params}:{params:Promise<{id:str
     </main>
   );
 }
+// Route dynamique "/requests/[id]" : [id] est récupéré depuis l'URL.
+// Cette page assemble les détails, propositions, clôture, signalement et évaluation selon les droits.

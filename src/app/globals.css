@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+/* Variables globales : elles permettent de modifier rapidement les couleurs et les styles communs. */
 :root {
   --ink: #17243d;
   --muted: #667085;
@@ -14,6 +15,7 @@
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
+/* Styles de base applicables à toutes les pages. */
 body {
   margin: 0;
   min-height: 100vh;
@@ -62,8 +64,10 @@ button, input, textarea, select { font: inherit; }
 .button-success { background: var(--success); color: white; }
 .button[disabled], .button:disabled { opacity: .55; cursor: not-allowed; }
 
+/* Mise en page commune des pages et composants. */
 .container { width: min(1180px, 88%); margin: 0 auto; }
 .page { padding: 44px 0 72px; }
+/* Zone principale de présentation de l'accueil. */
 .hero {
   border-radius: 24px; overflow: hidden; min-height: 310px;
   display: grid; grid-template-columns: 1.2fr .8fr; align-items: center;
@@ -96,6 +100,7 @@ button, input, textarea, select { font: inherit; }
 .meta { display:flex; align-items:center; gap:12px; color:#718096; font-size:13px; margin-top:16px; }
 
 .filter-bar { display:grid; grid-template-columns:2fr 1fr 1fr auto; gap:10px; padding:14px; background:white; border:1px solid var(--line); border-radius:16px; margin-bottom:22px; }
+/* Champs de formulaire : le même style est partagé entre inscription, demande et profil. */
 .field { display:flex; flex-direction:column; gap:7px; }
 .field label { font-weight: 750; font-size: 13px; }
 .input, .select, .textarea {
