@@ -4,12 +4,15 @@ import { getReports } from "@/application/campus-use-cases";
 import { getCurrentUser } from "@/infrastructure/auth-session";
 import { moderateRequest } from "@/lib/actions";
 
+// Route "/admin" : page réservée aux administrateurs.
+// Cette vérification doit rester côté serveur, même si le lien n'apparaît que pour les admins.
 export default async function AdminPage() {
   const user=await getCurrentUser();
-  if(!user) redirect("/login");
-  if(user.role!=="admin") redirect("/dashboard");
+  if(!user) redirect("/login"); // Les visiteurs anonymes sont envoyés vers la connexion.
+  if(user.role!=="admin") redirect("/dashboard"); // Un étudiant ne peut pas ouvrir cette page.
   const reports=getReports(campusRepository);
 
+  // Les actions serveur ne modifient jamais directement React : elles changent SQLite.
   async function keep(requestId:number){ "use server"; await moderateRequest(requestId,"keep"); }
   async function hide(requestId:number){ "use server"; await moderateRequest(requestId,"hide"); }
 

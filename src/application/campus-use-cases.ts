@@ -3,6 +3,7 @@
 import type { CampusRepository } from "@/domain/campus-repository";
 
 export function listRecentRequests(repo: CampusRepository, limit = 6) {
+  // Demande au dépôt les demandes visibles pour l'accueil.
   return repo.findRecentRequests(limit);
 }
 
@@ -30,6 +31,8 @@ export function createHelpRequest(
   authorId: number,
   input: { title: string; description: string; subject: string; level: string; availability: string },
 ) {
+  // L'évaluation est limitée aux participants et contrôlée avant chaque insertion.
+  // Nettoyage métier : le use case vérifie les longueurs avant l'appel au dépôt.
   const title = input.title.trim();
   const description = input.description.trim();
   if (!title || title.length < 5) throw new Error("Le titre doit contenir au moins 5 caractères.");
@@ -43,6 +46,7 @@ export function proposeHelp(
   studentId: number,
   message: string,
 ) {
+  // Toutes les restrictions sont vérifiées côté serveur avant l'insertion.
   const request = repo.findRequestById(requestId);
   if (!request) throw new Error("Demande introuvable.");
   if (request.status !== "open") throw new Error("Cette demande n’accepte plus de propositions.");
@@ -60,6 +64,7 @@ export function decideProposal(
   studentId: number,
   decision: "accepted" | "refused",
 ) {
+  // Cette transaction métier garantit qu'une décision ne peut être prise que dans les bons états.
   const request = repo.findRequestById(requestId);
   const proposal = repo.findProposals(requestId).find((item) => item.id === proposalId);
   if (!request || !proposal) throw new Error("Élément introuvable.");
@@ -72,6 +77,7 @@ export function decideProposal(
 }
 
 export function completeHelpSession(repo: CampusRepository, requestId: number, studentId: number) {
+  // Seul l'auteur d'une séance acceptée peut la marquer comme terminée.
   const request = repo.findRequestById(requestId);
   if (!request) throw new Error("Demande introuvable.");
   if (request.authorId !== studentId) throw new Error("Seul l’auteur peut clôturer la demande.");

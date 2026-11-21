@@ -4,6 +4,7 @@ import { campusRepository } from "@/infrastructure/campus-repository";
 import { getDashboard } from "@/application/campus-use-cases";
 import { getCurrentUser } from "@/infrastructure/auth-session";
 
+// Tableau de bord : les données sont lues via Application puis regroupées avant l'affichage.
 export default async function DashboardPage() {
   const user=await getCurrentUser();
   if(!user) redirect("/login");

@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/infrastructure/auth-session";
 import { ProfileForm } from "@/presentation/components/RequestForms";
 
+// Le profil est protégé : la route redirige les visiteurs non authentifiés.
 export default async function ProfilePage() {
   const user=await getCurrentUser();
   if(!user) redirect("/login");

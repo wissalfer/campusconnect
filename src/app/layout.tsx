@@ -12,6 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
+  // Récupération de l'utilisateur pour afficher les liens adaptés au rôle.
   const user = await getCurrentUser();
 
   return (

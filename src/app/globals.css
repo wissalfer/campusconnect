@@ -2,15 +2,17 @@
 
 /* Variables globales : elles permettent de modifier rapidement les couleurs et les styles communs. */
 :root {
-  --ink: #17243d;
-  --muted: #667085;
-  --line: #dde4ef;
-  --primary: #4f46e5;
-  --primary-dark: #3730a3;
+  /* Palette principale : bleu nuit, turquoise et corail pour une interface plus chaude. */
+  --ink: #18324a;
+  --muted: #64748b;
+  --line: #d7e5e8;
+  --primary: #087f8c;
+  --primary-dark: #075d67;
   --surface: #ffffff;
-  --background: #f4f7fb;
-  --success: #16866a;
-  --warning: #b7791f;
+  --background: #eff7f7;
+  --success: #138a72;
+  --warning: #c66a35;
+  --accent: #f28c70;
 }
 
 * { box-sizing: border-box; }
@@ -19,7 +21,9 @@ html { scroll-behavior: smooth; }
 body {
   margin: 0;
   min-height: 100vh;
-  background: var(--background);
+  background:
+    radial-gradient(circle at 8% 8%, rgba(242, 140, 112, .09), transparent 24rem),
+    linear-gradient(180deg, #f9fdfd 0%, var(--background) 100%);
   color: var(--ink);
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -43,12 +47,13 @@ button, input, textarea, select { font: inherit; }
 .brand-mark {
   display: grid; place-items: center; width: 38px; height: 38px;
   border-radius: 11px; color: white;
-  background: linear-gradient(135deg, #5b5ce2, #7c3aed);
+  background: linear-gradient(135deg, var(--primary), #20a4a6);
+  box-shadow: 0 8px 18px rgba(8, 127, 140, .22);
 }
 .main-nav { display: flex; gap: 24px; margin-right: auto; color: #526174; font-weight: 650; }
 .main-nav a:hover { color: var(--primary); }
 .header-actions { display: flex; align-items: center; gap: 10px; }
-.avatar { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; background: #e8e7ff; color: var(--primary); font-weight: 800; }
+.avatar { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; background: #dff3f1; color: var(--primary); font-weight: 800; }
 .profile-link { font-weight: 700; }
 
 .button {
@@ -57,7 +62,7 @@ button, input, textarea, select { font: inherit; }
   border: 1px solid transparent; cursor: pointer; font-weight: 750;
   transition: .18s ease;
 }
-.button-primary { background: var(--primary); color: white; box-shadow: 0 8px 18px rgba(79,70,229,.18); }
+.button-primary { background: var(--primary); color: white; box-shadow: 0 8px 18px rgba(8,127,140,.18); }
 .button-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
 .button-ghost { background: white; border-color: var(--line); color: var(--ink); }
 .button-danger { background: #b42318; color: white; }
@@ -71,13 +76,13 @@ button, input, textarea, select { font: inherit; }
 .hero {
   border-radius: 24px; overflow: hidden; min-height: 310px;
   display: grid; grid-template-columns: 1.2fr .8fr; align-items: center;
-  color: white; background: linear-gradient(115deg, #27266f 0%, #5148ca 58%, #7169dd 100%);
-  box-shadow: 0 24px 60px rgba(50,48,137,.16);
+  color: white; background: linear-gradient(115deg, #12384b 0%, #087f8c 58%, #21a6a0 100%);
+  box-shadow: 0 24px 60px rgba(18,56,75,.18);
 }
 .hero-copy { padding: 52px; }
 .eyebrow { text-transform: uppercase; letter-spacing: .12em; font-size: 12px; font-weight: 800; }
 .hero h1 { max-width: 620px; margin: 14px 0 14px; font-size: clamp(38px, 5vw, 64px); line-height: 1.02; }
-.hero p { max-width: 560px; color: #dcdefa; line-height: 1.65; }
+.hero p { max-width: 560px; color: #dff5f3; line-height: 1.65; }
 .hero-art { height: 100%; display: grid; place-items: center; background: radial-gradient(circle at 50% 50%, rgba(255,255,255,.16), transparent 56%); }
 .hero-card { width: 210px; height: 150px; border-radius: 24px; background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.28); transform: rotate(4deg); box-shadow: 0 20px 40px rgba(18,18,80,.2); padding: 24px; }
 .hero-card div { height: 10px; margin: 12px 0; border-radius: 10px; background: rgba(255,255,255,.7); }
@@ -92,9 +97,9 @@ button, input, textarea, select { font: inherit; }
 .request-card { transition: .18s ease; }
 .request-card:hover { transform: translateY(-3px); box-shadow: 0 16px 34px rgba(24,39,75,.09); }
 .card-top { display:flex; justify-content:space-between; align-items:center; gap:10px; }
-.subject { color: var(--primary); font-weight: 800; font-size: 13px; }
+.subject { color: #0a7a84; font-weight: 800; font-size: 13px; }
 .status { border-radius: 999px; padding: 6px 9px; font-size: 12px; font-weight: 800; background: #edf3ff; color: #3b5a99; }
-.status.accepted { background: #fff4d6; color: #95610b; }.status.completed { background: #daf7ea; color: #147158; }.status.closed { background:#f1f3f6;color:#667085; }
+.status.accepted { background: #ffe8df; color: #9c4b2d; }.status.completed { background: #daf7ea; color: #147158; }.status.closed { background:#edf3f3;color:#667085; }
 .request-card h3 { margin: 14px 0 8px; font-size: 19px; }
 .request-card p { color: var(--muted); line-height: 1.55; }
 .meta { display:flex; align-items:center; gap:12px; color:#718096; font-size:13px; margin-top:16px; }
@@ -108,10 +113,10 @@ button, input, textarea, select { font: inherit; }
   color:var(--ink); padding:11px 12px; outline:none;
 }
 .textarea { min-height:110px; resize:vertical; }
-.input:focus, .select:focus, .textarea:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(79,70,229,.1); }
+.input:focus, .select:focus, .textarea:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(8,127,140,.10); }
 
 .auth-layout { min-height: calc(100vh - 72px); display:grid; grid-template-columns:1fr 1fr; }
-.auth-aside { display:grid; place-items:center; padding:60px; color:white; background:linear-gradient(145deg,#27266f,#5a50cf); }
+.auth-aside { display:grid; place-items:center; padding:60px; color:white; background:linear-gradient(145deg,#12384b,#087f8c); }
 .auth-aside-inner { max-width:440px; }.auth-aside h1 { font-size:48px; margin:12px 0; }.auth-aside p { line-height:1.7;color:#dedffa; }
 .auth-main { display:grid; place-items:center; background:#fff; padding:40px; }
 .auth-card { width:min(440px,100%); }.auth-card h2 { font-size:32px;margin:0 0 8px }.auth-card form { display:grid; gap:15px;margin-top:24px }

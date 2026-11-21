@@ -28,7 +28,7 @@ export default async function RequestDetailPage({params}:{params:Promise<{id:str
         {user?.id===request.authorId && request.status==="accepted" && <form action={closeRequest} style={{marginTop:20}}><button className="button button-success" type="submit">Marquer la séance comme terminée</button></form>}
       </article>
       <aside className="card side-card">
-        {request.status==="open" ? (user ? (user.id===request.authorId?<p className="muted">Vous êtes l’auteur de cette demande. Gérez les propositions ci-dessous.</p>:<ProposalForm requestId={requestId}/>):<p>Veuillez <a href="/login" style={{color:"#4f46e5",fontWeight:800}}>vous connecter</a> pour proposer votre aide.</p>) : <p className="muted">Cette demande n’accepte plus de nouvelles propositions.</p>}
+        {request.status==="open" ? (user ? (user.id===request.authorId?<p className="muted">Vous êtes l’auteur de cette demande. Gérez les propositions ci-dessous.</p>:<ProposalForm requestId={requestId}/>):<p>Veuillez <a href="/login" style={{color:"#087f8c",fontWeight:800}}>vous connecter</a> pour proposer votre aide.</p>) : <p className="muted">Cette demande n’accepte plus de nouvelles propositions.</p>}
         {user && <details style={{marginTop:16,borderTop:"1px solid var(--line)",paddingTop:12}}><summary style={{cursor:"pointer",fontWeight:750}}>Signaler la publication</summary><div style={{marginTop:12}}><ReportForm requestId={requestId}/></div></details>}
       </aside>
     </div>
