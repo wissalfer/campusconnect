@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { db } from "./db";
@@ -55,6 +56,9 @@ export async function createRequest(formData: FormData) {
   if (!parsed.success) return { error: "Veuillez renseigner une demande complète (20 caractères minimum pour la description)." };
   const result = db.prepare(`INSERT INTO requests (author_id,title,description,subject,level,availability,status) VALUES (?,?,?,?,?,?,?)`)
     .run(user.id, parsed.data.title, parsed.data.description, parsed.data.subject, parsed.data.level, parsed.data.availability, "open");
+  revalidatePath("/");
+  revalidatePath("/requests");
+  revalidatePath("/dashboard");
   redirect(`/requests/${Number(result.lastInsertRowid)}`);
 }
 
@@ -69,6 +73,7 @@ export async function updateProfile(formData: FormData) {
   }).safeParse(Object.fromEntries(formData));
   if (!parsed.success) return { error: "Veuillez vérifier les informations du profil." };
   db.prepare(`UPDATE users SET name=?,speciality=?,level=?,skills=? WHERE id=?`).run(parsed.data.name,parsed.data.speciality,parsed.data.level,parsed.data.skills,user.id);
+  revalidatePath("/", "layout");
   return { success: "Profil enregistré." };
 }
 
@@ -84,6 +89,8 @@ export async function proposeHelp(requestId: number, formData: FormData) {
   const exists = db.prepare("SELECT id FROM proposals WHERE request_id=? AND student_id=?").get(requestId,user.id);
   if (exists) return { error: "Vous avez déjà proposé votre aide." };
   db.prepare(`INSERT INTO proposals (request_id,student_id,message,status) VALUES (?,?,?,?)`).run(requestId,user.id,message.data,"pending");
+  revalidatePath(`/requests/${requestId}`);
+  revalidatePath("/dashboard");
   return { success: "Votre proposition a été envoyée." };
 }
 
@@ -105,6 +112,8 @@ export async function decideProposal(requestId: number, proposalId: number, deci
   } else {
     db.prepare(`UPDATE proposals SET status='refused' WHERE id=?`).run(proposalId);
   }
+  revalidatePath(`/requests/${requestId}`);
+  revalidatePath("/dashboard");
   return { success: decision === "accepted" ? "Aide acceptée." : "Proposition refusée." };
 }
 
@@ -116,6 +125,9 @@ export async function completeRequest(requestId: number) {
   if (request.author_id !== user.id) return { error: "Seul l’auteur peut clôturer la demande." };
   if (request.status !== "accepted") return { error: "La demande doit avoir une aide acceptée." };
   db.prepare(`UPDATE requests SET status='completed' WHERE id=?`).run(requestId);
+  revalidatePath(`/requests/${requestId}`);
+  revalidatePath("/dashboard");
+  revalidatePath("/");
   return { success: "Séance terminée." };
 }
 
@@ -134,6 +146,8 @@ export async function addReview(requestId: number, formData: FormData) {
   const revieweeId = user.id === request.author_id ? request.helper_id : request.author_id;
   if (!revieweeId) return { error: "Participant introuvable." };
   db.prepare(`INSERT INTO reviews (request_id,reviewer_id,reviewee_id,rating,comment) VALUES (?,?,?,?,?)`).run(requestId,user.id,revieweeId,rating,comment.data);
+  revalidatePath(`/requests/${requestId}`);
+  revalidatePath("/dashboard");
   return { success: "Évaluation enregistrée." };
 }
 
@@ -148,6 +162,8 @@ export async function reportRequest(requestId: number, formData: FormData) {
     return { error: "Cette publication a déjà été signalée par vous." };
   }
   db.prepare(`UPDATE requests SET report_count=(SELECT COUNT(*) FROM reports WHERE request_id=? AND status='pending') WHERE id=?`).run(requestId,requestId);
+  revalidatePath(`/requests/${requestId}`);
+  revalidatePath("/admin");
   return { success: "Signalement envoyé à l’administration." };
 }
 
@@ -159,5 +175,8 @@ export async function moderateRequest(requestId: number, action: "keep"|"hide") 
   }
   db.prepare(`UPDATE reports SET status=? WHERE request_id=?`).run(action === "hide" ? "treated" : "dismissed",requestId);
   db.prepare(`UPDATE requests SET report_count=0 WHERE id=?`).run(requestId);
+  revalidatePath("/admin");
+  revalidatePath("/");
+  revalidatePath("/requests");
   return { success: action === "hide" ? "Publication masquée." : "Signalement ignoré." };
 }

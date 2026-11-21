@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import { completeRequest, decideProposal } from "@/lib/actions";
@@ -18,9 +18,9 @@ export default async function RequestDetailPage({params}:{params:Promise<{id:str
   const canReview=Boolean(user && request.status==="completed" && (user.id===request.author_id || user.id===accepted?.student_id));
   const hasReview=user?db.prepare("SELECT id FROM reviews WHERE request_id=? AND reviewer_id=?").get(requestId,user.id):null;
 
-  async function acceptProposal(proposalId:number){ "use server"; await decideProposal(requestId,proposalId,"accepted"); }
-  async function refuseProposal(proposalId:number){ "use server"; await decideProposal(requestId,proposalId,"refused"); }
-  async function closeRequest(){ "use server"; await completeRequest(requestId); }
+  async function acceptProposal(proposalId:number){ "use server"; await decideProposal(requestId,proposalId,"accepted"); redirect(`/requests/${requestId}`); }
+  async function refuseProposal(proposalId:number){ "use server"; await decideProposal(requestId,proposalId,"refused"); redirect(`/requests/${requestId}`); }
+  async function closeRequest(){ "use server"; await completeRequest(requestId); redirect(`/requests/${requestId}`); }
 
   return (
     <main className="container page"><div className="detail-layout">

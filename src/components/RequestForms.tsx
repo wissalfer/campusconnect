@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import { addReview, createRequest, proposeHelp, reportRequest, updateProfile } from "@/lib/actions";
 
 export function CreateRequestForm() {
@@ -21,7 +22,8 @@ export function CreateRequestForm() {
 
 export function ProfileForm({ user }: { user: {name:string; speciality:string; level:string; skills:string} }) {
   const [state,setState]=useState<{error?:string;success?:string}|null>(null);
-  async function submit(event:FormEvent<HTMLFormElement>) { event.preventDefault(); const result=await updateProfile(new FormData(event.currentTarget)); if(result)setState(result); }
+  const router=useRouter();
+  async function submit(event:FormEvent<HTMLFormElement>) { event.preventDefault(); const result=await updateProfile(new FormData(event.currentTarget)); if(result){setState(result);if(result.success)router.refresh();} }
   return (
     <form className="form-stack" onSubmit={submit}>
       {state?.error && <div className="error-box" role="alert">{state.error}</div>}
@@ -37,7 +39,8 @@ export function ProfileForm({ user }: { user: {name:string; speciality:string; l
 
 export function ProposalForm({ requestId }: { requestId:number }) {
   const [state,setState]=useState<{error?:string;success?:string}|null>(null);
-  async function submit(event:FormEvent<HTMLFormElement>) { event.preventDefault(); const result=await proposeHelp(requestId,new FormData(event.currentTarget)); if(result)setState(result); }
+  const router=useRouter();
+  async function submit(event:FormEvent<HTMLFormElement>) { event.preventDefault(); const result=await proposeHelp(requestId,new FormData(event.currentTarget)); if(result){setState(result);if(result.success)router.refresh();} }
   return (
     <form className="form-stack" onSubmit={submit}>
       {state?.error && <div className="error-box" role="alert">{state.error}</div>}
@@ -50,7 +53,8 @@ export function ProposalForm({ requestId }: { requestId:number }) {
 
 export function ReportForm({ requestId }: { requestId:number }) {
   const [state,setState]=useState<{error?:string;success?:string}|null>(null);
-  async function submit(event:FormEvent<HTMLFormElement>) { event.preventDefault(); const result=await reportRequest(requestId,new FormData(event.currentTarget)); if(result)setState(result); }
+  const router=useRouter();
+  async function submit(event:FormEvent<HTMLFormElement>) { event.preventDefault(); const result=await reportRequest(requestId,new FormData(event.currentTarget)); if(result){setState(result);if(result.success)router.refresh();} }
   return (
     <form className="form-stack" onSubmit={submit}>
       {state?.error && <div className="error-box" role="alert">{state.error}</div>}
@@ -63,7 +67,8 @@ export function ReportForm({ requestId }: { requestId:number }) {
 
 export function ReviewForm({ requestId }: { requestId:number }) {
   const [state,setState]=useState<{error?:string;success?:string}|null>(null);
-  async function submit(event:FormEvent<HTMLFormElement>) { event.preventDefault(); const result=await addReview(requestId,new FormData(event.currentTarget)); if(result)setState(result); }
+  const router=useRouter();
+  async function submit(event:FormEvent<HTMLFormElement>) { event.preventDefault(); const result=await addReview(requestId,new FormData(event.currentTarget)); if(result){setState(result);if(result.success)router.refresh();} }
   return (
     <form className="form-stack" onSubmit={submit}>
       {state?.error && <div className="error-box" role="alert">{state.error}</div>}
